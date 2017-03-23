@@ -1,10 +1,11 @@
 import requests
-import template
+import constants
 from bs4 import BeautifulSoup
+from game import Game
 
 
 def get_data(team_name):
-    page = requests.get(template.url)
+    page = requests.get(constants.url)
     soup = BeautifulSoup(page.text, "lxml")
     team_cell = soup.find_all(string=team_name)[1]
     game_row = team_cell.find_parent().find_parent()
@@ -17,15 +18,12 @@ def get_data(team_name):
         opponent = team2.contents[0]
     else:
         opponent = team1.contents[0]
-    game_info = {
-        "time": time.text,
-        "location": location.string,
-        "opponent": opponent.string
-    }
-    new_email = template.email.format(team_name, opponent, time.text,
-                                      location.string)
-    print(new_email)
-    return game_info
 
-get_data("Estonian Thunderfrogs")
-get_data("Tay Klompson and the Laun Shivingstons")
+    game_obj = Game(team_name, opponent.string, time.text, location.string)
+    return game_obj
+
+for team in constants.current_teams:
+    new_game = get_data(team)
+    email = new_game.make_email()
+
+    print(email)
