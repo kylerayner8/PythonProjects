@@ -1,16 +1,16 @@
 import requests
-import template
+import constants
 from bs4 import BeautifulSoup
 import os
 
 
 def get_season_data():
-    cur_season = template.current_season_index
+    cur_season = constants.current_season_index
     end_index = cur_season - 1
     results = open("results.txt", 'w')
 
     while cur_season > end_index:
-        url = template.base_season_url.format(cur_season)
+        url = constants.base_season_url.format(cur_season)
         page = requests.get(url)
         soup = BeautifulSoup(page.text, "lxml")
 
@@ -31,4 +31,6 @@ def get_season_data():
 
 if 'results.txt' in os.listdir():
     os.remove('results.txt')
-get_season_data()
+#get_season_data()
+
+print("hello")
