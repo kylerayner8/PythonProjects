@@ -2,11 +2,12 @@ import constants
 
 class Game(object):
 
-    def __init__(self, team, opponent, time, location):
+    def __init__(self, team=None, opponent=None, time=None, location=None, directions=None):
         self.team = team
         self.opponent = opponent
         self.time = time
         self.location = location
+        self.directions = directions
 
     def make_email(self):
         email_string = constants.email.format(self.team, self.opponent, self.time, self.location)
