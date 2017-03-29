@@ -1,7 +1,9 @@
+import _pickle as pickle
 import requests
-import constants
 from bs4 import BeautifulSoup
-from game import Game
+import constants
+
+from objects.game import Game
 
 
 def get_data(team_name):
@@ -22,11 +24,18 @@ def get_data(team_name):
     else:
         opponent = team1.contents[0]
 
-    game_obj = Game(team_name, opponent.string, time.text, location.string, location.contents[0]['href'])
+    game_obj = Game(team_name, str(opponent.string), str(time.text), str(location.string), str(location.contents[0]['href']))
     return game_obj
 
 for team in constants.current_teams:
     new_game = get_data(team)
+    # If saving the game is desired for some reason...
+    # file_name = "{0}_game.pkl".format(team.lower())
+    # file_name = file_name.replace(" ", "_")
+    # file_name = file_name.replace("#", "")
+    # file = open(file_name, 'wb')
+    # pickle.dump(new_game, file)
+    # file.close()
     email = new_game.make_email()
 
     print(email)

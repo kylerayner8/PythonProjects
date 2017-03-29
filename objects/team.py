@@ -14,3 +14,7 @@ class Team(object):
     def update_record(self, wins, losses):
         self.wins = wins
         self.losses = losses
+
+
+    def __str__(self):
+        return "Team: {0}".format(self.name)

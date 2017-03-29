@@ -12,3 +12,7 @@ class Game(object):
     def make_email(self):
         email_string = constants.email.format(self.team, self.opponent, self.time, self.location)
         return email_string
+
+
+    def __str__(self):
+        return "{0}:{1}:{2}:{3}".format(self.team, self.opponent, self.time, self.location)
