@@ -2,6 +2,7 @@ import _pickle as pickle
 import requests
 from bs4 import BeautifulSoup
 import constants
+import datetime
 
 from objects.game import Game
 
@@ -12,7 +13,7 @@ def get_data(team_name):
     try:
         team_cell = soup.find_all(string=team_name)[1]
     except IndexError:
-        return Game()
+        return None
     game_row = team_cell.find_parent().find_parent()
     children = game_row.contents
     time = children[1]
@@ -24,18 +25,20 @@ def get_data(team_name):
     else:
         opponent = team1.contents[0]
 
-    game_obj = Game(team_name, str(opponent.string), str(time.text), str(location.string), str(location.contents[0]['href']))
+    dt = datetime.datetime.strptime(time.string, '%m/%d/%Y %I:%M:%S %p')
+    game_obj = Game(team_name, str(opponent.string), dt, str(location.string), str(location.contents[0]['href']))
     return game_obj
 
-for team in constants.current_teams:
-    new_game = get_data(team)
-    # If saving the game is desired for some reason...
-    # file_name = "{0}_game.pkl".format(team.lower())
-    # file_name = file_name.replace(" ", "_")
-    # file_name = file_name.replace("#", "")
-    # file = open(file_name, 'wb')
-    # pickle.dump(new_game, file)
-    # file.close()
-    email = new_game.make_email()
+if __name__ == "__main__":
+    for team in constants.current_teams:
+        new_game = get_data(team)
+        # If saving the game is desired for some reason...
+        # file_name = "{0}_game.pkl".format(team.lower())
+        # file_name = file_name.replace(" ", "_")
+        # file_name = file_name.replace("#", "")
+        # file = open(file_name, 'wb')
+        # pickle.dump(new_game, file)
+        # file.close()
+        email = new_game.make_email()
 
-    print(email)
+        print(email)

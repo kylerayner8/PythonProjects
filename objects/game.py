@@ -9,9 +9,35 @@ class Game(object):
         self.location = location
         self.directions = directions
 
+
     def make_email(self):
+        # Generates a string that describes the game for usage in an email
         email_string = constants.email.format(self.team, self.opponent, self.time, self.location)
         return email_string
+
+
+    def get_gcal_dict(self):
+        end_hour = self.time.hour + 1
+        event = {
+            'summary': '{0} vs. {1}'.format(self.team, self.opponent),
+            'location': self.location,
+            'description': 'Game event',
+            'start': {
+                'dateTime': self.time.isoformat(),
+                'timeZone': 'US/Central'
+            },
+            'end': {
+                'dateTime': self.time.replace(hour=end_hour).isoformat(),
+                'timeZone': 'US/Central'
+            },
+            'attendees': [],
+            'reminders': {
+                'useDefault': True,
+                'overrides': [],
+            },
+        }
+
+        return event
 
 
     def __str__(self):
