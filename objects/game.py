@@ -12,7 +12,9 @@ class Game(object):
 
     def make_email(self):
         # Generates a string that describes the game for usage in an email
-        email_string = constants.email.format(self.team, self.opponent, self.time, self.location)
+        formatted_time = self.time.strftime("%I:%M %p").lstrip("0")
+        location_translation = constants.locations_mapping.get(self.location, self.location)
+        email_string = constants.email.format(self.team, self.opponent, formatted_time, location_translation)
         return email_string
 
 
