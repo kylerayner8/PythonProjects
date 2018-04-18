@@ -7,38 +7,62 @@ import datetime
 from objects.game import Game
 
 
-def get_data(team_name):
-    page = requests.get(constants.url)
+def find_closest_game(games_list):
+    now = datetime.datetime.now()
+    closest_game = None
+    closest_gap = None
+    # games_list.reverse()
+
+    for game in games_list:
+        now_to_new_game_time = game.time - now
+        # close_game_to_new_game_time = game.time - closest_game.time
+        # Ignore the game if it's already happened
+        if now_to_new_game_time.total_seconds() < 0:
+            pass
+        else:
+            if closest_game == None:
+                closest_game = game
+                closest_gap = now_to_new_game_time
+            elif closest_gap.total_seconds() > now_to_new_game_time.total_seconds():
+                closest_game = game
+                closest_gap = now_to_new_game_time
+
+    return closest_game
+
+
+def get_data(team_url):
+    page = requests.get(team_url)
     soup = BeautifulSoup(page.text, "lxml")
+    
     try:
-        team_cell = soup.find_all(string=team_name)[1]
+        game_list = soup.find("div", {"id":"game-list"})
     except IndexError:
         return None
-    game_row = team_cell.find_parent().find_parent()
-    children = game_row.contents
-    time = children[1]
-    location = children[3]
-    team1 = children[5]
-    team2 = children[7]
-    if team1.contents[0] == team_name:
-        opponent = team2.contents[0]
-    else:
-        opponent = team1.contents[0]
+    
+    list_of_games = game_list.find_all("div", class_="row-fluid")
+    games_list = list()
+    for game in list_of_games:
+        info_list = game.find_all("div")
+        teams = game.find_all("div", class_="schedule-team-name")
+        
+        date_time = info_list[0]
+        date = date_time.find(class_="push-left").text
+        time = date_time.find(class_="push-right").text.strip()
+        full_date_string = date + " " + time
 
-    dt = datetime.datetime.strptime(time.string, '%m/%d/%Y %I:%M:%S %p')
-    game_obj = Game(team_name, str(opponent.string), dt, str(location.string), str(location.contents[0]['href']))
-    return game_obj
+        location = game.find_all(class_="span2")[-1].find("span").text
+        parsed_location = " ".join(location.split())
+
+        dtobj = datetime.datetime.strptime(full_date_string, "%a, %b %d, %Y %I:%M %p")
+
+        new_game = Game(teams[0].text.strip(), teams[1].text.strip(), dtobj, parsed_location)
+        games_list.append(new_game)
+
+    closest_game = find_closest_game(games_list)
+
+    return closest_game
+
 
 if __name__ == "__main__":
-    for team in constants.current_teams:
-        new_game = get_data(team)
-        # If saving the game is desired for some reason...
-        # file_name = "{0}_game.pkl".format(team.lower())
-        # file_name = file_name.replace(" ", "_")
-        # file_name = file_name.replace("#", "")
-        # file = open(file_name, 'wb')
-        # pickle.dump(new_game, file)
-        # file.close()
-        email = new_game.make_email()
-
-        print(email)
+    closest_game = get_data("http://cscsports.usetopscore.com/t/estonian-thunderfrogs/schedule/event_id/active_events_only/game_type/all")
+    print(closest_game.make_email())
