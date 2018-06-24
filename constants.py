@@ -1,8 +1,8 @@
 # URL for the current season
 url = "http://www.myteamsports.net/prd/league/myleague.asp?orgid=5&orgsportid=32&leagueID=770&seasonID=8816"
 
-current_teams = ["Estonian Thunderfrogs", "Latvian Proud Oak"]
-old_team_names = ["Tay Klompson and the Laun Shivingstons", "Tricycle #PHREAKZ"]
+current_teams = ["Estonian Thunderfrogs", "Bimmy Jutler and the Jyus Tones"]
+old_team_names = ["Tay Klompson and the Laun Shivingstons", "Tricycle #PHREAKZ", "Latvian Proud Oak"]
 
 email = "{0} vs. {1}\nGame Time: {2}\nLocation: {3}"
 
@@ -14,6 +14,8 @@ locations_mapping = {
 # Generic season url, looks like.
 base_season_url = "http://www.myteamsports.net/prd/league/myleague.asp?orgid=5&orgsportid=32&leagueID=770&seasonID={0}"
 current_season_index = 8692
+
+base_schedule_url = "http://cscsports.usetopscore.com/t/{0}/schedule/event_id/active_events_only/game_type/all"
 
 # A basic google calendar event
 event = {

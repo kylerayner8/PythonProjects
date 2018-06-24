@@ -64,5 +64,9 @@ def get_data(team_url):
 
 
 if __name__ == "__main__":
-    closest_game = get_data("http://cscsports.usetopscore.com/t/estonian-thunderfrogs/schedule/event_id/active_events_only/game_type/all")
+    # closest_game = get_data("http://cscsports.usetopscore.com/t/estonian-thunderfrogs/schedule/event_id/active_events_only/game_type/all")
+    # print(closest_game.make_email())
+    closest_game = get_data("http://cscsports.usetopscore.com/t/estonian-thunderfrogs-1/schedule/event_id/active_events_only/game_type/all")
     print(closest_game.make_email())
+    # closest_game = get_data("http://cscsports.usetopscore.com/t/bimmy-jutler-and-the-jyus-tones/schedule/event_id/active_events_only/game_type/all")
+    # print(closest_game.make_email())
