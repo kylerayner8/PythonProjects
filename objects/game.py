@@ -8,13 +8,14 @@ class Game(object):
         self.time = time
         self.location = location
         self.directions = directions
-
+        self.email_str = "{time}\n{team} vs. {opp}\n{location}"
 
     def make_email(self):
         # Generates a string that describes the game for usage in an email
         formatted_time = self.time.strftime("%I:%M %p").lstrip("0")
         location_translation = constants.locations_mapping.get(self.location, self.location)
-        email_string = constants.email.format(self.team, self.opponent, formatted_time, location_translation)
+        email_string = self.email_str.format(team=self.team, opp=self.opponent, 
+                                             time=formatted_time, location=location_translation)
         return email_string
 
 
